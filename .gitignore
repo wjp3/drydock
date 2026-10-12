@@ -1,0 +1,13 @@
+.DS_Store
+node_modules/
+.drydock/
+playbook/*.pdf
+playbook/.tmp/
+*.log
+# Private build files: the maintainer's rules, state, case law, handoffs, email notes, and private scrub word list stay on this machine.
+CLAUDE.md
+STATE.md
+docs/
+scripts/scrub-patterns.local
+.claude/
+dist/zip-stage/

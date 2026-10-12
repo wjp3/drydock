@@ -1,0 +1,38 @@
+# {{PROJECT_NAME}} — project rules
+
+{{ONE_LINER}}
+
+This project is built with **Drydock**: plan, build, check, prove, remember. The owner decides; Drydock advises and shows evidence.
+
+## Files that hold the memory (read these before anything else)
+- `VISION.md` — what done looks like, in the owner's words. On conflict with anything else, the owner's latest word wins, then VISION.md.
+- `BUILD-MAP.md` — the segments in order, each with a binary exit test. The map is the contract. "Done" for a segment means its exit test is met with evidence a separate check agreed with.
+- `STATE.md` — where we are: last green segment, what is in flight, what is next, open threads.
+- `DECIDED.md` — settled decisions. Never re-argue one here; state it and move on. Add new decisions with a date and a why.
+- `docs/reviews/` — verdicts and proof sheets. A check that is not filed did not happen.
+- `docs/handoffs/` — session notes. `/drydock:wake` reads the newest one.
+
+## Stack and commands
+| Thing | Value |
+|---|---|
+| Stack | {{STACK}} |
+| Install | `{{CMD_INSTALL}}` |
+| Run locally | `{{CMD_DEV}}` |
+| Test | `{{CMD_TEST}}` |
+| Typecheck | `{{CMD_TYPECHECK}}` |
+| Build | `{{CMD_BUILD}}` |
+| Preview URL | {{URL_PREVIEW}} |
+| Live URL | {{URL_LIVE}} |
+
+## Rules
+1. **One segment at a time.** Build the active segment on the map and nothing else. Ideas for later go into `BUILD-MAP.md` under "Parking lot", not into code.
+2. **Test first.** Each exit-test clause becomes a runnable test or a scripted walk before the code that satisfies it. It must fail first.
+3. **Commit at every green.** When a test goes green, commit. Main is the shelf of things that work.
+4. **Nothing is done on your say-so.** A fresh-context checker on a different model reviews the diff against the card before any "done". Show the command and its output, never a summary of it.
+5. **Nothing leaves this computer without the owner's go for that exact step.** No `git push`, no deploy to the live site, no publishing, until the owner says go this time.
+6. **Plain English for the owner** ({{OWNER_LEVEL}}). The real term, then one clause saying what it means. One step at a time, named. A recommendation every time, never a bare list of options.
+7. **If the change fits in one sentence, skip the ceremony.** No plan, no panel: write the test, make it green, commit.
+8. **When stuck after three honest attempts, stop and say so.** Name what is blocking, give the options with a recommendation. Never paper over it.
+
+## Drydock commands
+`/drydock:wake` start of a session · `/drydock:build S#` build a segment · `/drydock:check` · `/drydock:prove` · `/drydock:ship` · `/drydock:handoff` end of a session · `/drydock:status` · `/drydock:help`

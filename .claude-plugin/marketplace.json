@@ -1,0 +1,14 @@
+{
+  "name": "drydock",
+  "owner": { "name": "wjp3", "url": "https://github.com/wjp3" },
+  "description": "Drydock: a build method you drop into Claude Code. It interviews you, writes the map, builds one segment at a time, and never calls anything done until a separate check agrees.",
+  "plugins": [
+    {
+      "name": "drydock",
+      "source": "./plugin",
+      "description": "Plan, build, check, prove, remember. From idea to MVP to finished build, with a stop at every segment's exit test.",
+      "category": "workflow",
+      "tags": ["planning", "verification", "testing", "beginner-friendly", "method"]
+    }
+  ]
+}

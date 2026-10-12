@@ -1,0 +1,32 @@
+# {{PROJECT_NAME}} — the build map
+
+_The contract. Segments in the order they must be built. A segment is done when every clause of its exit test is met with evidence, and a separate check agreed. Written {{DATE}}. Reviewed by: {{REVIEWED_BY}}._
+
+> **MVP line:** after {{MVP_SEGMENT}}
+> **Finished line:** after {{FINISHED_SEGMENT}}
+
+**Modes.** SOLO: build, check, prove in one session. PANEL: convene a panel on the design before building. REVIEW: after building, a cold reader who has only seen the card tries to break it. CREW: the full build crew (full tier only).
+
+**Status words.** todo · building · green · blocked
+
+---
+
+## S0 - The skeleton is live
+- **Status:** todo
+- **Mode:** SOLO (the point of S0 is to prove the whole path from code to a URL before any feature exists)
+- **Size:** S
+- **Depends on:** none
+- **What you can do when it's done:** Open a web address and see the empty app with its name on it. The test command runs and passes. Code is saved on GitHub.
+- **Exit test:**
+  - [ ] `{{CMD_TEST}}` exits 0 with at least one real test in it
+  - [ ] The preview URL returns the app's name in the page title
+  - [ ] `git log` shows the scaffold commit and the repository exists on GitHub
+- **How we'll check it:** run the test command; open the preview URL in a browser and read the title; `git remote -v`
+- **Notes:** {{S0_NOTES}}
+
+{{SEGMENTS}}
+
+---
+
+## Parking lot (ideas for after the finished line)
+{{PARKING_LOT}}

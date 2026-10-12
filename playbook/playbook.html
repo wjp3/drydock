@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Drydock Playbook</title>
+<style>
+  @page { size: Letter; margin: 0.8in 0.85in; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: Georgia, "Times New Roman", serif; font-size: 11pt; line-height: 1.5; color: #1b1b1b; margin: 0; }
+  h1, h2, h3, h4 { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; color: #163a5c; line-height: 1.2; }
+  h1 { font-size: 26pt; margin: 0 0 6pt; }
+  h2 { font-size: 17pt; margin: 22pt 0 8pt; border-bottom: 2px solid #163a5c; padding-bottom: 4pt; }
+  h3 { font-size: 13pt; margin: 16pt 0 6pt; }
+  h4 { font-size: 11pt; margin: 12pt 0 4pt; color: #2a5a7f; }
+  p { margin: 6pt 0 8pt; }
+  ul, ol { margin: 4pt 0 8pt 0; padding-left: 20pt; }
+  li { margin: 2pt 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 9.8pt; margin: 8pt 0 12pt; page-break-inside: auto; }
+  tr { page-break-inside: avoid; }
+  th, td { border: 1px solid #c4cfdb; padding: 5pt 7pt; vertical-align: top; text-align: left; }
+  th { background: #e9eff6; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 9.5pt; }
+  code { font-family: Menlo, Consolas, "Courier New", monospace; font-size: 9.3pt; background: #f2f4f6; padding: 1px 4px; border-radius: 3px; }
+  pre { font-family: Menlo, Consolas, "Courier New", monospace; font-size: 9.3pt; background: #f2f4f6; padding: 9pt 11pt; border-radius: 4px; white-space: pre-wrap; margin: 8pt 0 12pt; border: 1px solid #e0e5ea; }
+  .callout { border-left: 4px solid #2a7f8f; background: #f1f8f9; padding: 8pt 12pt; margin: 12pt 0; page-break-inside: avoid; }
+  .callout.say { border-left-color: #c58a12; background: #fdf7e8; }
+  .callout.warn { border-left-color: #b23a3a; background: #fbf0f0; }
+  .callout h4 { margin-top: 0; }
+  .cover { height: 8.6in; display: flex; flex-direction: column; justify-content: center; page-break-after: always; }
+  .cover h1 { font-size: 44pt; margin-bottom: 10pt; }
+  .cover .sub { font-size: 16pt; color: #2a5a7f; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; margin-bottom: 30pt; }
+  .cover .meta { color: #555; font-size: 10.5pt; }
+  .part { page-break-before: always; }
+  .toc ol { list-style: none; padding-left: 0; column-count: 2; column-gap: 24pt; }
+  .toc li { margin: 3pt 0; font-size: 10.5pt; }
+  .small { font-size: 9.5pt; color: #4a4a4a; }
+  .kicker { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; text-transform: uppercase; letter-spacing: 0.08em; font-size: 9pt; color: #2a7f8f; margin-bottom: 2pt; }
+  .two { display: flex; gap: 14pt; }
+  .two > div { flex: 1; }
+  .box { border: 1px solid #c4cfdb; border-radius: 4px; padding: 8pt 11pt; margin: 8pt 0; page-break-inside: avoid; }
+  .box h4 { margin-top: 0; }
+  .qs { font-size: 10.3pt; line-height: 1.42; }
+  .qs h3 { margin: 11pt 0 4pt; font-size: 12pt; }
+  .qs p, .qs li { margin: 3pt 0 5pt; }
+  .qs table { font-size: 9.3pt; margin: 5pt 0 8pt; }
+  .qs th, .qs td { padding: 3.5pt 6pt; }
+  .qs .callout { margin: 8pt 0; padding: 6pt 10pt; }
+  .qs pre { margin: 5pt 0 8pt; padding: 7pt 10pt; }
+  hr { border: 0; border-top: 1px solid #c4cfdb; margin: 14pt 0; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="kicker">The plain-English playbook</div>
+  <h1>Drydock</h1>
+  <div class="sub">A way of building things with Claude Code that holds together: plan, build, check, prove, remember.</div>
+  <p>For anyone who has handed Claude an idea, watched it build something that broke, fixed it, and watched twenty new problems appear. This book is the method that stops that, sized to fit you.</p>
+  <p class="meta">Version 0.1, October 2026. Companion to the Drydock plugin at github.com/wjp3/drydock. Two-page quickstart first; the full playbook after it. Read the quickstart, install, and start. Come back to the rest when you need it.</p>
+</div>
+
+<!-- ============================== QUICKSTART ============================== -->
+<div class="qs">
+<div class="kicker">Quickstart, page 1 of 2</div>
+<h1>Drydock in two pages</h1>
+
+<h3>What it is</h3>
+<p>Drydock is a set of habits, packaged as a Claude Code plugin, that make a build hold together. You describe what you want in your own words. Drydock interviews you, writes a map of small segments with a test that says when each is done, builds one segment at a time, has a <em>separate</em> reviewer check the work, attacks it, walks it like a person would, and then stops to show you the evidence. Nothing goes live without your go. You never have to read code unless you want to.</p>
+
+<h3>Install (about two minutes)</h3>
+<p>You need a paid Claude plan (Pro or above) and the Claude desktop app, plus Node.js 20 or newer, git, and the GitHub command-line tool <code>gh</code> for the apps you will build (if someone set up your computer for you, these are already there). Mac or Windows.</p>
+<p><strong>The plugin, with no terminal:</strong> open <code>claude.ai/customize/plugins</code> in your browser (or <strong>Customize &gt; Plugins</strong> in the desktop app), choose <strong>Add &gt; Add marketplace</strong>, type <code>wjp3/drydock</code>, and add it. Drydock is saved to your account and shows up in Claude Code the next time you start a session. If you were sent <code>drydock-plugin.zip</code> instead, choose <strong>Add &gt; Upload plugin</strong> and pick that file.</p>
+<p><strong>Or in a Claude Code session</strong>, type:</p>
+<pre>/plugin marketplace add wjp3/drydock
+/plugin install drydock@drydock</pre>
+<p>Then make a folder for your project (empty is fine), open it in the desktop app's Code tab, and type <code>/drydock:setup</code>. It checks your computer, asks four questions, and creates the files that will hold the build's memory.</p>
+
+<h3>Your first hour</h3>
+<ol>
+  <li><strong><code>/drydock:setup</code></strong>. Four questions: your Claude plan, how technical you are, new or existing project, what you are building in one sentence. It picks a size for the machinery (see Tiers) and offers a few companion tools.</li>
+  <li><strong><code>/drydock:plan</code></strong>. The interview. Answer in plain words; say "I don't know" when you don't. You get <code>VISION.md</code> (what done means, in your words) and <code>BUILD-MAP.md</code> (the segments in order, each with its test). Then lenses you do not have review the map and propose fixes. You decide.</li>
+  <li><strong><code>/drydock:build S0</code></strong>. The first segment is always "the skeleton is live": an empty app with its name at a web address, one passing test, code saved on GitHub. It proves the whole path from code to a URL before any feature exists, so the path is never the surprise.</li>
+  <li><strong>Try it. Say "next."</strong> Every segment ends with a stop: what you can now do and where to try it, the test clause by clause with evidence, what the separate check found and what was fixed, what is not proven. If it does what you expected, say <strong>next</strong>. If not, say what is off.</li>
+  <li><strong><code>/drydock:handoff</code></strong> when you stop for the day. <strong><code>/drydock:wake</code></strong> when you come back. Start each new segment in a fresh session.</li>
+</ol>
+
+<div class="part"></div>
+<div class="kicker">Quickstart, page 2 of 2</div>
+<h3>The five verbs</h3>
+<table>
+  <tr><th style="width:14%">Verb</th><th style="width:28%">You type</th><th>What happens</th></tr>
+  <tr><td><strong>Plan</strong></td><td><code>/drydock:plan</code></td><td>Interview, then the vision and the map, then a review of the map.</td></tr>
+  <tr><td><strong>Build</strong></td><td><code>/drydock:build S3</code> or "next"</td><td>Freeze the segment's test. Write the checks first, failing. Build until green. Save a checkpoint. Then check, prove, and stop.</td></tr>
+  <tr><td><strong>Check</strong></td><td><code>/drydock:check</code></td><td>Earlier segments' tests run again. A fresh reviewer, on a different model, reads the change against its card and runs the tests itself. (Build does this for you.)</td></tr>
+  <tr><td><strong>Prove</strong></td><td><code>/drydock:prove</code></td><td>The red team tries inputs nobody tried. The running app is walked like a person would use it. A proof sheet is filed. (Build does this for you.)</td></tr>
+  <tr><td><strong>Remember</strong></td><td><code>/drydock:wake</code>, <code>/drydock:handoff</code>, <code>/drydock:status</code></td><td>Where we are, what is settled, what is next. Memory lives in files, not in the conversation.</td></tr>
+</table>
+<p>Also: <code>/drydock:ship</code> (preview first, then live only on your yes), <code>/drydock:panel</code> (several expert lenses on a decision), <code>/drydock:crew</code> (the full build crew, for the heaviest segments), <code>/drydock:help</code>.</p>
+
+<h3>The rules that protect you</h3>
+<ul>
+  <li><strong>You decide.</strong> Drydock recommends, every time, and shows its evidence. It never waits on you for things it can propose, and it never acts outside your computer without your go for that exact step.</li>
+  <li><strong>Nothing is done on its say-so.</strong> "Done" comes with the command that was run and what it printed, or a screenshot. A separate reviewer agreed. If you don't see evidence, ask for it.</li>
+  <li><strong>Nothing leaves your computer without a yes.</strong> No code pushed, nothing deployed, nothing published, until you say go for that step. A built-in gate asks even if Drydock forgets.</li>
+  <li><strong>Stuck means stop.</strong> After three honest attempts at the same problem, Drydock stops and tells you what is blocking, with options and a recommendation. It never pretends.</li>
+  <li><strong>One segment per session.</strong> Long conversations get worse. Hand off, start fresh, wake.</li>
+</ul>
+
+<div class="callout say">
+  <h4>Three sentences worth memorizing</h4>
+  <p><strong>"Show me the evidence."</strong> Use it any time something is called done. You should get a command and its output, or a screenshot, not a summary.<br>
+  <strong>"Stop and tell me what's blocking."</strong> Use it when it keeps trying the same thing.<br>
+  <strong>"Handoff."</strong> Use it when the conversation has gotten long or confused. Then open a fresh session and type <code>/drydock:wake</code>.</p>
+</div>
+
+<h3>What Drydock will not do</h3>
+<p>Create accounts or type passwords for you (you do those in your browser). Push, deploy, or publish without your yes. Call anything done without evidence. Keep going when it is stuck. Upgrade to the expensive machinery on its own.</p>
+</div>
+
+<!-- ============================== PART 1 ============================== -->
+<div class="part"></div>
+<div class="kicker">The playbook</div>
+<h1>Contents</h1>
+<div class="toc"><ol>
+  <li>1. Why builds break</li>
+  <li>2. The method on one page</li>
+  <li>3. Setting up: accounts, tiers, companions</li>
+  <li>4. Planning: the interview, the vision, the map</li>
+  <li>5. Building a segment</li>
+  <li>6. Check and prove</li>
+  <li>7. Panels</li>
+  <li>8. The crew</li>
+  <li>9. Remembering</li>
+  <li>10. Shipping</li>
+  <li>11. When things go wrong</li>
+  <li>12. Glossary</li>
+  <li>Appendix A. Command reference</li>
+  <li>Appendix B. The files Drydock creates</li>
+  <li>Appendix C. Where the method comes from</li>
+</ol></div>
+
+<h2>1. Why builds break</h2>
+<p>If you have built with Claude before, you have probably met all four of these. Each has a fix, and the fix has to be structural, not a reminder in a prompt, because reminders fade as the conversation grows.</p>
+
+<h3>Failure one: no plan, so Claude improvises</h3>
+<p>You give it the idea. It starts coding. It makes a hundred small decisions you never saw, each reasonable alone, and the result is something that is not quite what you meant. Then you ask for a change, and the change fights the decisions underneath it.</p>
+<p><strong>The fix.</strong> Before any code, a written vision in your words and a map of small segments, each with a test that says when it is done. The plan is short enough to read and correct. A bad line of plan becomes hundreds of bad lines of code; a bad line of code is just a bad line of code. So the plan is where your attention pays most. Anthropic's own guidance says the same: have Claude interview you first and write the spec, then build from the spec in a fresh session.</p>
+
+<h3>Failure two: fixes break other things</h3>
+<p>You report a problem. It fixes that problem. Three other things stop working, because the fix touched code that other screens depended on and nothing checked them.</p>
+<p><strong>The fix.</strong> Tests written before the code, so every segment leaves a check behind. A look at what else touches the changed code before editing it. Every earlier segment's checks run again before any new "done". And a saved checkpoint every time a test goes green, so there is always a known-good version to go back to. "Main is the shelf of things that work."</p>
+
+<h3>Failure three: context lost between sessions</h3>
+<p>A new session starts cold. It re-decides things you settled last week, or forgets a feature exists, or builds a second version of something. Even inside one long session, quality drops as the conversation fills up; Claude starts forgetting earlier instructions.</p>
+<p><strong>The fix.</strong> Memory in files, not in the conversation. <code>STATE.md</code> says where we are. <code>DECIDED.md</code> says what is settled, with the reason, so it is never re-argued. Every session ends with a handoff note and starts with a wake-up that reads it. One segment per session, then a fresh start. A snapshot is saved automatically before Claude compresses a long conversation.</p>
+
+<h3>Failure four: Claude says done when it isn't</h3>
+<p>"All tests pass. The feature is complete." You try it. It doesn't work. Anthropic's researchers put it plainly: agents reliably skew positive when grading their own work. The builder is the wrong judge of the build.</p>
+<p><strong>The fix.</strong> The segment's test is frozen word for word before building, and graded by echo: the grader must repeat each clause exactly beside its verdict, so a softened or paraphrased bar shows up as a text difference, not a judgment call. A fresh reviewer, running on a different model so it does not share the builder's blind spots, re-runs the tests itself and reads the change against the card. A red team attacks with inputs the builder never tried. The running app is walked. The summary you read is audited against the evidence before it reaches you. And a built-in gate holds any "done" message while the test command is red.</p>
+
+<div class="callout">
+  <h4>Where this comes from</h4>
+  <p>Drydock is a working protocol developed over several real products and then checked, on October 11, 2026, against Anthropic's published guidance and research and the main public methods (Superpowers, Spec Kit, BMAD, Anthropic's own feature-dev plugin, and others). Every method that works lands on the same five moves. Drydock adds three the public methods lack: a different model family checks the builder, the summary you read is audited first, and every control traces to a specific failure with a rule for retiring it. Appendix C lists everything that was read.</p>
+</div>
+
+<!-- ============================== PART 2 ============================== -->
+<div class="part"></div>
+<h2>2. The method on one page</h2>
+<p>Five verbs. The first and last are about thinking and remembering. The middle three are the loop that builds.</p>
+
+<h3>Plan</h3>
+<p>An interview until a stranger could build the right thing from the vision alone. Then the map: segments in dependency order, each a card with what you will be able to do when it is done and a binary exit test. The first segment, S0, is always the skeleton. Then the map is reviewed by lenses you do not have (a real user on a bad day, an engineer who has been paged at 3 a.m., a contrarian) and you decide what changes.</p>
+
+<h3>Build</h3>
+<p>One segment. Its exit test is frozen. Each clause becomes a check that fails before the code exists. Build until the checks pass. Save a checkpoint at every green.</p>
+
+<h3>Check</h3>
+<p>Every earlier segment's checks run again. A fresh reviewer on a different model reads the change against the card, runs the tests itself, and reports gaps that affect correctness. Gaps get fixed. Style opinions do not.</p>
+
+<h3>Prove</h3>
+<p>A red team attacks the segment with inputs the builder never tried, both directions on every rule (the bad case is refused <em>and</em> the good case next to it still works). The running app is walked the way a person would use it. Evidence goes on a proof sheet.</p>
+
+<h3>Remember</h3>
+<p><code>STATE.md</code> for where we are. <code>DECIDED.md</code> for what is settled. A handoff to close the session, a wake-up to open the next one.</p>
+
+<h3>The loop, drawn</h3>
+<pre>card → freeze the exit test → write the failing checks → build → checks green → checkpoint
+     → earlier segments' checks again → fresh reviewer (other model) → fix gaps
+     → red team → walk the running app → grade the frozen test by echo → proof sheet
+     → checkpoint, mark green, update STATE.md → STOP and show you</pre>
+<p>The stop at the end is the design. You try it. You say "next". The next segment starts in a fresh session.</p>
+
+<h3>Three rules that cut across everything</h3>
+<ul>
+  <li><strong>The one-sentence rule.</strong> If a change can be described in one sentence and touches one place, skip the plan and the panel. Write the check, make it green, save. Ceremony is for things that deserve it.</li>
+  <li><strong>Right-size the machinery.</strong> Panels and the crew are earned by the build, not applied by default. A separate evaluator is worth its cost when the task is beyond what the model does reliably alone. That is Anthropic's finding and Drydock's rule.</li>
+  <li><strong>Every control names its failure.</strong> Each gate and each reviewer in Drydock says which of the four failures it exists to stop and when it can be retired. Models improve; a control that no longer catches anything should be removed, because every component in a harness encodes an assumption about what the model cannot do on its own.</li>
+</ul>
+
+<!-- ============================== PART 3 ============================== -->
+<div class="part"></div>
+<h2>3. Setting up</h2>
+
+<h3>What you need on your computer</h3>
+<table>
+  <tr><th>Tool</th><th>What it is for</th><th>Where to get it</th></tr>
+  <tr><td>A paid Claude plan</td><td>Claude Code needs Pro, Max, or Team.</td><td>claude.ai</td></tr>
+  <tr><td>The Claude desktop app</td><td>The thing you talk to. Its Code tab is Claude Code with a chat box instead of a terminal. It updates itself.</td><td>claude.com/download</td></tr>
+  <tr><td>Node.js 20+</td><td>Runs the app you build and Drydock's own small scripts.</td><td>nodejs.org, choose LTS</td></tr>
+  <tr><td>git</td><td>Saves checkpoints of your code.</td><td>git-scm.com (on a Mac, <code>xcode-select --install</code> also works)</td></tr>
+  <tr><td>gh</td><td>Talks to GitHub from the terminal.</td><td>cli.github.com, then <code>gh auth login</code></td></tr>
+</table>
+<p>Setup checks all of these and tells you exactly which is missing. If someone is setting up your computer for you, give them the <em>Drydock setup checklist</em> that comes with this playbook: a one-line installer puts everything in place and signs you in through your browser, and after that you never need a terminal. On Windows, Drydock's scripts are plain Node and run the same way.</p>
+
+<h3>Accounts you create yourself</h3>
+<p>Drydock never creates accounts or types passwords. You do these in your browser, and only when the build needs them.</p>
+<table>
+  <tr><th>Service</th><th>Why</th><th>When</th></tr>
+  <tr><td>GitHub</td><td>Where your code lives. Also where the Drydock plugin comes from.</td><td>Before S0</td></tr>
+  <tr><td>Netlify</td><td>Hosts your app and gives every change a private preview address before anything goes live.</td><td>Before S0, if the thing you build has a web address</td></tr>
+  <tr><td>Supabase</td><td>Database and sign-in, when your app needs to remember things between visits or let people log in.</td><td>When the plan says so</td></tr>
+</table>
+<p>All three have free tiers that are real. Keys and passwords never go into the chat or into code. A file called <code>docs/SECRETS.md</code> says where each lives, never what it is.</p>
+
+<h3>The four setup questions</h3>
+<ol>
+  <li><strong>Your Claude plan.</strong> This picks the size of the machinery. If you don't know, say so; the light version is the default.</li>
+  <li><strong>How technical you are.</strong> "I build by describing what I want and don't read code" is a fine answer and sets the voice: plain words, every term explained once, no code in your face unless you ask.</li>
+  <li><strong>New or existing project.</strong></li>
+  <li><strong>What you're building, in one sentence,</strong> and a short name.</li>
+</ol>
+
+<h3>Tiers: the method at three sizes</h3>
+<p>Multi-agent runs cost many times what a conversation costs. On a Pro plan, a full panel can burn a week of usage in an afternoon. So the method never changes, but the machinery scales.</p>
+<table>
+  <tr><th></th><th>lite</th><th>standard</th><th>full</th></tr>
+  <tr><td><strong>Default when</strong></td><td>Pro, or unknown</td><td>Max or Team; no other people's data, logins, or money</td><td>Max or Team; logins, other people's data, payments, or real users depending on it</td></tr>
+  <tr><td><strong>Map review</strong></td><td>one map critic</td><td>3-seat panel, 1 round</td><td>5 to 7 seats, up to 2 rounds</td></tr>
+  <tr><td><strong>Per segment</strong></td><td>a checker, a red team pass; you walk it</td><td>checker, red team, a walker, an honesty audit of the summary</td><td>same, plus the crew on marked segments</td></tr>
+  <tr><td><strong>Agent runs per segment</strong></td><td>2 to 4</td><td>4 to 7</td><td>15 to 25 when the crew runs</td></tr>
+</table>
+<p>Drydock tells you before any large run and never upgrades the tier on its own. You can change it any time by asking: "switch Drydock to standard."</p>
+
+<h3>Companion tools (what each one is for)</h3>
+<table>
+  <tr><th>Tool</th><th>In plain words</th></tr>
+  <tr><td>Context7</td><td>Gives Claude the current manual for the libraries it is using, so it stops guessing at how things work.</td></tr>
+  <tr><td>Netlify tools</td><td>Lets Claude create the preview address and publish, when you say go.</td></tr>
+  <tr><td>Supabase tools</td><td>Lets Claude set up and change your database, scoped to your one project.</td></tr>
+  <tr><td>Playwright</td><td>A robot browser. Lets the walker and the red team click through your running app and take screenshots.</td></tr>
+  <tr><td>typescript-lsp</td><td>Only if your project uses TypeScript: shows type errors after every edit.</td></tr>
+</table>
+<p>Already built into Claude Code, nothing to install: <code>/code-review</code> (a fresh-context bug review), <code>/verify</code> (runs the app and checks a change against it), <code>/goal</code> (a separate evaluator keeps a session working until a condition holds), <code>/rewind</code> (go back to an earlier point). Drydock uses these where they fit.</p>
+<div class="callout warn">
+  <h4>One method at a time</h4>
+  <p>Do not install other method plugins alongside Drydock (spec kits, agile-team packs, loop runners). Two methods that both want to own planning and the definition of done will fight. Pick one.</p>
+</div>
+
+<!-- ============================== PART 4 ============================== -->
+<div class="part"></div>
+<h2>4. Planning: the interview, the vision, the map</h2>
+
+<h3>The interview</h3>
+<p>Drydock asks until it could write every part of the vision without guessing, or about eight rounds, whichever comes first. It uses multiple-choice questions where there is a sensible default and open questions where it needs your story. It is told not to ask what it can infer and to dig into the parts you have not thought about. Roughly, it will ask about:</p>
+<ol>
+  <li><strong>Who</strong> uses it, and the moment they first open it.</li>
+  <li><strong>The core loop</strong>: the one thing a person does again and again, and what they see after.</li>
+  <li><strong>Day one versus someday</strong>: what must exist for one real person to use it for the real purpose.</li>
+  <li><strong>Data</strong>: does anything need to be remembered? Whose is it? Who may see it? Children? Health, money, legal?</li>
+  <li><strong>Logins</strong>: who signs in, how many kinds of people, what one kind must never be able to do.</li>
+  <li><strong>Devices and places</strong>: phones, bad wifi, shared computers.</li>
+  <li><strong>Must-nevers</strong>: the things that would make you pull the plug.</li>
+  <li><strong>What already exists</strong>: spreadsheets, forms, a logo.</li>
+  <li><strong>Constraints</strong>: deadline, hours per week, money, rules you must follow.</li>
+  <li><strong>Done</strong>, in your words: "When I can ___, this is finished."</li>
+</ol>
+<div class="callout say">
+  <h4>How to answer</h4>
+  <p>In your own words, with the real example in mind: "Mrs. Alvarez has 26 fourth graders and forty minutes" beats "a teacher with a class". Say "I don't know" freely; Drydock will propose a default and you can correct it. If you get tired of questions, say "just build it": Drydock writes the vision with its assumptions listed and you cross out the wrong ones. Proposing beats interrogating.</p>
+</div>
+
+<h3>VISION.md</h3>
+<p>What done means, in your words. One paragraph of promise. The day-one story. Two finish lines: <strong>MVP</strong> (the smallest thing a real person can use for the real purpose) and <strong>Finished</strong> (everything in the vision). Must-nevers. What is out of scope on purpose. The assumptions Drydock made, for you to correct. Edit it whenever your mind changes, and tell Drydock you did.</p>
+
+<h3>The stack, in plain words</h3>
+<p>The "stack" is the set of tools the app is made from. Drydock picks the simplest one that meets the vision and writes the choice and the reason in <code>DECIDED.md</code>.</p>
+<table>
+  <tr><th>If the vision needs</th><th>Drydock picks</th><th>Because</th></tr>
+  <tr><td>Pages to read, no logins, nothing saved</td><td>A static site on Netlify</td><td>Nothing to secure, nothing to pay for, almost nothing can break.</td></tr>
+  <tr><td>People sign in and their things are saved</td><td>A web app (Vite and React) with Supabase for the database and logins, hosted on Netlify</td><td>Real free tiers; one database with built-in sign-in and per-person permissions; the most documented path for building with Claude.</td></tr>
+  <tr><td>Many people on phones</td><td>The same web app, made installable to the home screen</td><td>One codebase, no app store.</td></tr>
+  <tr><td>Money changes hands</td><td>Payments added in test mode first</td><td>Payments are where "it works" must be proven, not believed.</td></tr>
+</table>
+
+<h3>The map</h3>
+<p><code>BUILD-MAP.md</code> is the contract. Segments in the order they must be built. Each is a card:</p>
+<pre>## S3 - Students can log a book
+- Status: todo
+- Mode: SOLO (one screen, one table, no new permissions)
+- Size: M
+- Depends on: S1, S2
+- What you can do when it's done: A signed-in student picks a book and taps Log.
+  It appears in their list with today's date.
+- Exit test:
+  - [ ] Logging a book as a signed-in student adds one row to the reading log
+        with that student's id and today's date
+  - [ ] The logged book appears at the top of the student's list without a page reload
+  - [ ] A signed-out visitor who asks the server to log a book is refused and nothing is saved
+- How we'll check it: the log tests, plus a browser walk of the Log screen
+- Notes: the date is the student's local date, not the server's</pre>
+
+<h4>What a good exit test looks like</h4>
+<p>Each clause names one observable thing a stranger could check: a command and whether it passed, a web address and what it shows, a number that is zero. It says nothing about how it was built. It fits on a line.</p>
+<table>
+  <tr><th>Weak</th><th>Strong</th></tr>
+  <tr><td>Users can log in</td><td>A new user can sign up with an email and password, sign out, sign back in, and land on the home page with their name shown</td></tr>
+  <tr><td>The form works</td><td>Submitting the form with an empty title shows "Title is required" and saves nothing</td></tr>
+  <tr><td>It's fast</td><td>The list page loads in under 2 seconds with 500 rows on the preview address</td></tr>
+  <tr><td>Secure</td><td>A request for the books list without being signed in is refused and returns no rows</td></tr>
+</table>
+
+<h4>S0 is always the skeleton</h4>
+<p>Before any feature: an empty app with its name, at a preview address, with one passing test, and the code on GitHub. S0 proves the whole path from code to a URL. Every build that skips this discovers the path is broken on the day it matters.</p>
+
+<h4>Modes</h4>
+<table>
+  <tr><th>Mode</th><th>Means</th><th>Used when</th></tr>
+  <tr><td>SOLO</td><td>Build, check, prove in one session.</td><td>Most segments.</td></tr>
+  <tr><td>PANEL</td><td>Several expert lenses review the design before building.</td><td>A decision is contested or expensive to reverse.</td></tr>
+  <tr><td>REVIEW</td><td>After building, a cold reader who has seen only the card and the vision tries to find the gap between what was asked and what was delivered.</td><td>Other people's data, logins, or money appear.</td></tr>
+  <tr><td>CREW</td><td>The full build crew (full tier).</td><td>Logins, other people's data, payments, a rule that must never fail.</td></tr>
+</table>
+
+<h4>The two finish lines and the parking lot</h4>
+<p>The MVP line sits after the last card a real person needs. The Finished line sits after the last card in the vision. Every good idea that is not on the map goes in the parking lot at the bottom, so it is kept and not built yet.</p>
+
+<h3>The review of the map</h3>
+<p>Before any code, the map is read by lenses you do not have. On lite, one map critic wears three hats: the real user on a bad day, the engineer who has been paged at 3 a.m., and the contrarian who asks what should not be built at all. On standard and full, a panel of three to seven seats does this (see Panels). You get ranked findings with the exact edit for each, and the decisions only you can make, one at a time with a recommendation. Rulings go into <code>DECIDED.md</code> so they are never re-argued.</p>
+
+<h3>A worked example</h3>
+<div class="box">
+  <h4>Reading Log, for a fourth-grade class</h4>
+  <p><strong>Promise.</strong> Students log the books they read on the classroom iPad in under a minute. The teacher sees every student's week at a glance and can print a monthly summary for families. Nothing a student enters is visible to another student.</p>
+  <p><strong>MVP.</strong> Students can sign in, log a book, and see their own list. The teacher can see the class for the current week. <strong>Finished</strong> adds the monthly family summary, reading goals, and a badge when a goal is met.</p>
+  <p><strong>Must never.</strong> Show one student's log to another. Lose a log once it has been saved. Require a student to type an email.</p>
+  <p><strong>The map (shortened).</strong> S0 skeleton is live · S1 the class roster and student sign-in by picture-and-PIN (REVIEW: it is children's data) · S2 students log a book and see their list (SOLO) · S3 the teacher's week-at-a-glance (PANEL: the layout is contested) · <em>MVP line</em> · S4 monthly family summary as a printable page · S5 reading goals · S6 badges · <em>Finished line</em>. Parking lot: a parent login, book covers from a public API.</p>
+</div>
+
+<!-- ============================== PART 5 ============================== -->
+<div class="part"></div>
+<h2>5. Building a segment</h2>
+<p>You type <code>/drydock:build S3</code>, or just "next". Here is what happens, in the order you will see it, and what you do at each point.</p>
+
+<h3>What Drydock does</h3>
+<ol>
+  <li><strong>Starts and restates.</strong> It freezes the card's exit test (saves the exact words), marks the card "building", turns on the stop-gate, and tells you in plain words what you will be able to do when this is done and how it plans to get there. It makes a side branch for the work, so the main shelf stays untouched until the segment is proven.</li>
+  <li><strong>Scouts</strong> (unless the change is one-sentence small or touches no existing code). A read-only look at what else touches the code about to change, so a fix cannot quietly break a neighbor.</li>
+  <li><strong>Writes the checks first.</strong> One per clause. Runs them. They must fail, because the thing does not exist yet. If a check passes before the code is written, the check is wrong, and Drydock says so.</li>
+  <li><strong>Builds, in small steps.</strong> After each step it runs the relevant check. When a check goes green, it saves a checkpoint (a commit). You will see short lines saying what it is doing, then the command it ran and the last lines of what the command printed. Not summaries.</li>
+  <li><strong>Runs every earlier segment's checks again.</strong> A red one is fixed before anything else.</li>
+  <li><strong>Hands the work to a fresh reviewer</strong> on a different model, with only the card, the change, and the test command. The reviewer runs the tests itself and reports gaps that affect correctness. Drydock fixes them.</li>
+  <li><strong>Proves it.</strong> The red team attacks (see Check and prove). The running app is walked, by a robot browser on standard and full, by you on lite.</li>
+  <li><strong>Grades the frozen test by echo.</strong> Every clause is repeated word for word with met or not and the evidence. A softened clause fails the grade automatically.</li>
+  <li><strong>Files the proof sheet, merges to the main shelf, marks the card green, updates STATE.md.</strong></li>
+  <li><strong>Stops and shows you.</strong></li>
+</ol>
+
+<h3>The stop message, and how to read it</h3>
+<div class="box">
+  <p><strong>What you can now do.</strong> In your words, with the address or the command to try it.</p>
+  <p><strong>The exit test, clause by clause.</strong> Met or not, each with the evidence: the command and its last lines, or a screenshot path and what it shows.</p>
+  <p><strong>What the separate check and the red team found</strong>, and what was fixed.</p>
+  <p><strong>What is not proven</strong>, if anything. This line matters. "Not proven" is honest; "done with caveats" is not a phrase Drydock is allowed to use.</p>
+  <p><strong>Next.</strong> "Try it. If it does what you expected, say next. If not, tell me what's off."</p>
+</div>
+<p>What you do: try it, for real, the way the person it is for would. Then one of three things:</p>
+<ul>
+  <li><strong>"next"</strong>: start the next segment, in a fresh session.</li>
+  <li><strong>"what's off"</strong>, in plain words: "the date is wrong when I log at 11 p.m." Drydock treats this as a new clause or a bug, fixes it, and re-proves.</li>
+  <li><strong>"show me the evidence"</strong> for any clause that is just asserted.</li>
+</ul>
+
+<h3>The stuck rule</h3>
+<p>Three honest attempts at the same failure, or a change that would widen the card, or anything that needs your data, your money, or an account it does not have: Drydock stops, says what is blocking, gives options with a recommendation, and waits. It never edits a check to make it pass. If it stops mid-segment, it says "S3 is not met" first, then what is missing.</p>
+
+<h3>Checkpoints and the shelf, in plain words</h3>
+<p>Git saves a checkpoint of every file. Drydock saves one every time a check goes green, on a side branch for the segment. When the segment is proven, the branch is folded into <em>main</em>, the shelf of things that work. If a segment goes badly, the shelf is untouched and the branch can be thrown away. Claude Code also keeps its own rewind points inside a session (<code>/rewind</code>) for smaller steps back.</p>
+
+<h3>One segment per session</h3>
+<p>Conversations get worse as they get long. After a segment is shown, hand off and start fresh. Drydock will remind you. "Keep going" always wins if you say it, but you will get better results from the discipline.</p>
+
+<div class="callout">
+  <h4>Unattended runs</h4>
+  <p>Claude Code has a built-in command, <code>/goal</code>, that keeps a session working until a condition holds, judged by a separate evaluator model after every turn. For a long segment you can type the card's exit test as the goal and walk away. The stop-gate still holds a false "done" while the test command is red. Use this once you trust the flow, not on your first week.</p>
+</div>
+
+<!-- ============================== PART 6 ============================== -->
+<div class="part"></div>
+<h2>6. Check and prove</h2>
+<p>Four separate roles look at a segment before you do. None of them is the builder. Each exists because of a specific way "done" has lied before.</p>
+
+<table>
+  <tr><th style="width:16%">Role</th><th>What it sees</th><th>What it does</th><th>What it catches</th></tr>
+  <tr><td><strong>The checker</strong></td><td>The card, the change, the test command. Not the builder's reasoning.</td><td>Runs the tests itself. Grades every clause by echo. Reads the change for bugs and for anything outside the card's scope. Checks what else the change touches.</td><td>The builder's false "done". Gaps against the card. A neighbor that broke.</td></tr>
+  <tr><td><strong>The red team</strong></td><td>The card, the list of changed files, the address to attack. Not the builder's description.</td><td>Tries empty, huge, strange, and hostile inputs. Calls the app's addresses signed out, as another user, twice fast. Attacks every rule in both directions: the bad case is refused and the good case next to it still works.</td><td>Inputs nobody tried. A rule that over-refuses the good case. Leaks.</td></tr>
+  <tr><td><strong>The walker</strong></td><td>The card's "what you can do", the address.</td><td>Uses the running app like the person it is for, with a robot browser. Screenshot or exact text as proof per task. Judges "would the person get their task done", not "did it load".</td><td>Screens that render perfectly and do the wrong thing.</td></tr>
+  <tr><td><strong>The honesty audit</strong></td><td>The draft stop message and the evidence files. Not the builder's narrative.</td><td>Traces every claim to a receipt at matching strength. Rewrites over-claims.</td><td>A summary that claims more than the evidence. "Done with caveats."</td></tr>
+</table>
+
+<h3>Why a different model</h3>
+<p>Same context, same blind spots. Same model, similar blind spots. Drydock runs the checker and the red team on a different model family than the builder (if the builder is Opus, the checker runs on Sonnet and the red team on Fable or Opus at high effort, and so on). This is one of the three things Drydock adds to the public methods.</p>
+
+<h3>What evidence looks like</h3>
+<p>Acceptable: a command in a box and the last lines of what it printed, including the exit code. A screenshot path and what the screenshot shows. The exact text read from a screen. The red team's attack bodies and what happened to each.</p>
+<p>Not acceptable: "tests pass", "it works", "verified", "should be fine". If you see these without a receipt, say "show me the evidence".</p>
+
+<h3>The proof sheet</h3>
+<p>Every segment leaves <code>docs/reviews/&lt;date&gt;-S3-proof-sheet.md</code>: the clause table with evidence, what the checker found, what the red team tried and what held, the walk, the earlier segments' re-run, the checkpoint id, and what is not proven. A check that is not filed did not happen.</p>
+
+<!-- ============================== PART 7 ============================== -->
+<div class="part"></div>
+<h2>7. Panels</h2>
+<p>A panel is a set of lenses on a decision. Each seat reads the same material and hunts for what its lens sees. It is for decisions that are contested or expensive to reverse: the layout of the main screen, how sign-in works for children, whether to build a feature at all, the whole map before building starts. It is not for small changes.</p>
+
+<h3>The roster</h3>
+<p>The first time you convene a panel, Drydock builds a roster for your build in <code>docs/PANEL.md</code> and shows it to you. Five standing lenses: the real user on a bad day; data and privacy (whose data, who sees what, what must never leak); what breaks (the engineer at 3 a.m.); delivery cadence (is the order and size honest for your hours); the contrarian (the three ways this build dies; what should not be built). Plus domain seats your vision touches: children and consent, duty of care for health or money, offline and thumbs for phones in the field, the administrator who has to approve and support it, accessibility.</p>
+
+<h3>How it runs</h3>
+<p>Each seat gets one briefing file and reads only that. Seats first write their findings alone, so nobody anchors on anybody. A facilitator clusters and dedupes. On standard and full, the seats then argue across the table for a round or two, and a closing synthesis ranks everything by severity and agreement, lists the exact edits, and isolates the decisions only you can make.</p>
+<p>Research happens before the run, in the briefing, never inside it. Seats cannot browse the web or run anything; they read.</p>
+
+<h3>Reading a verdict</h3>
+<p>Two files are filed: the verdict (ranked findings, exact edits, owner decisions, direction) and a plain-English companion: what the room agreed on, what it argued about and how it landed, what only you can decide. Drydock applies only the changes you accept and writes your rulings into <code>DECIDED.md</code>.</p>
+<div class="callout">
+  <h4>The panel advises. You decide.</h4>
+  <p>Seats are told that candor is safe because they have no authority. Expect sharp findings. Expect disagreement. A finding is a proposal with evidence, not an order.</p>
+</div>
+
+<h3>Cost</h3>
+<p>Lite: three seats, no deliberation, a few minutes. Standard: three seats and one round, about five agent runs. Full: five to seven seats and up to two rounds, up to twenty-five agent runs and the better part of an hour. On Pro, dynamic workflows must be switched on once in <code>/config</code> for panels to run.</p>
+
+<!-- ============================== PART 8 ============================== -->
+<div class="part"></div>
+<h2>8. The crew</h2>
+<p>The crew is the build loop with every check done by an independent seat, and pass or fail decided by rules a model cannot talk its way around. It is for the heaviest segments: logins, other people's data, payments, a rule that must never fail. It runs on the full tier, on cards marked CREW. It costs fifteen to twenty-five agent runs and one to three hours. It is not worth it for a screen.</p>
+
+<h3>What happens</h3>
+<ol>
+  <li><strong>Pre-flight.</strong> The exit test is frozen. If it cannot be frozen, nothing runs.</li>
+  <li><strong>Recon.</strong> Four scouts in parallel, each blind to the others: what to fix, how any rule should be enforced, what correct behavior means in your world, what else the change touches.</li>
+  <li><strong>Build and prove, in bounded rounds.</strong> A builder builds. In parallel, an independent scorer re-derives every claim and runs the tests itself, and the red team attacks. The scorer's last act each round is the echo-grade of the frozen test. The round passes only if the grade is clean and the red team found nothing.</li>
+  <li><strong>Verify.</strong> Four adjudicators in parallel: the owner's lens (does this honor the vision), the checker (walks every affected screen, re-runs earlier segments), correctness, and an honesty seat whose only job is asking whether the evidence is real.</li>
+  <li><strong>Report.</strong> A synthesizer writes a plain-English owner read and a technical receipt.</li>
+  <li><strong>Acceptance.</strong> A relay auditor traces every claim in the owner read to a receipt and licenses exactly what may be told to you. A cold reader, shown only the card, the vision, and the change, judges whether what was delivered is what was asked. A live walker drives the deployed app.</li>
+</ol>
+
+<h3>What HALT means</h3>
+<p>If the exit test was not met, or any required seat returned nothing, the honest outcome is HALT, and that is the first word you will read. Not "done with caveats". A HALT is the crew working, not failing: it means something that would have reached you as "done" did not. You then choose: another round, a smaller card, or the safe fallback (ship with the risky part switched off).</p>
+
+<h3>Model lanes</h3>
+<p>The builder runs on one model family; the seats that check it run on another; a third family gives a deliberately different perspective. The crew records which models it asked for. If your plan lacks one, Claude Code substitutes, and the owner read says so, because then the model-mix defense did not hold for that run and the deterministic gates are what you are relying on.</p>
+
+<!-- ============================== PART 9 ============================== -->
+<div class="part"></div>
+<h2>9. Remembering</h2>
+<p>The conversation is not the memory. Files are.</p>
+<table>
+  <tr><th>File</th><th>Holds</th><th>Who reads it</th></tr>
+  <tr><td><code>VISION.md</code></td><td>What done means, in your words.</td><td>Everything that plans or judges.</td></tr>
+  <tr><td><code>BUILD-MAP.md</code></td><td>The segments, their status, their exit tests.</td><td>Build, status, wake.</td></tr>
+  <tr><td><code>STATE.md</code></td><td>Where we are: last green, in flight, next, open threads, last shipped.</td><td>Wake reads it first.</td></tr>
+  <tr><td><code>DECIDED.md</code></td><td>Settled decisions with the date and the why. Never re-argued without new evidence.</td><td>Everything, before proposing anything.</td></tr>
+  <tr><td><code>docs/reviews/</code></td><td>Proof sheets and panel verdicts.</td><td>Wake reads the newest.</td></tr>
+  <tr><td><code>docs/handoffs/</code></td><td>One note per session: what happened, decisions, state, open threads, learnings.</td><td>Wake reads the newest.</td></tr>
+</table>
+
+<h3>Handoff and wake</h3>
+<p><code>/drydock:handoff</code> writes the session note, saves a snapshot, updates STATE.md, and tells you the one next move. <code>/drydock:wake</code> reads STATE.md, the map, the newest handoff and verdict, checks git, and gives you a read-back in under fifteen lines with one recommended next move. Then it waits.</p>
+
+<h3>When the conversation gets compressed</h3>
+<p>Claude Code compresses long conversations automatically. Right before it does, Drydock saves a snapshot (active segment, last test, recent checkpoints, the top of STATE.md). When the compressed session continues, Drydock is told to re-read STATE.md and the snapshot before doing anything. If a session feels confused after a compression, say "handoff" and start fresh.</p>
+
+<!-- ============================== PART 10 ============================== -->
+<div class="part"></div>
+<h2>10. Shipping</h2>
+<p><code>/drydock:ship</code> moves what is green out into the world, in two steps, each verified by actually loading it.</p>
+<ol>
+  <li><strong>Preflight.</strong> The shelf is clean, every segment's checks are green. The first time, the GitHub repository and the Netlify site are created, each with your go.</li>
+  <li><strong>Preview.</strong> The app is built once and deployed to a private preview address. Drydock loads it and shows you the proof (the response code and a marker of the change, or a screenshot). You can send the preview link to someone to try.</li>
+  <li><strong>Live, on your yes.</strong> Drydock asks "Preview verified at ... Go live?" Only on a clear yes does it deploy to the live address, then loads that and shows the proof.</li>
+  <li><strong>Push, on your yes.</strong> "Push the code to GitHub?" Then it records everything in STATE.md and writes a handoff.</li>
+</ol>
+<p>The gate is real: a built-in check watches for publishing commands and asks you in the terminal if Drydock has not already recorded your go for that exact step. If anything fails verification, the ship stops there and shows you the failure.</p>
+<p><strong>Rollback</strong>: Netlify keeps every deploy; the previous one can be made live again from its dashboard in a click. The code shelf keeps every checkpoint.</p>
+
+<!-- ============================== PART 11 ============================== -->
+<div class="part"></div>
+<h2>11. When things go wrong</h2>
+<table>
+  <tr><th style="width:34%">You see</th><th>What is happening</th><th>What to say or type</th></tr>
+  <tr><td>"Done" but it doesn't work when you try it.</td><td>A claim outran its evidence.</td><td>"Show me the evidence for each clause." Then "what's off": describe what you saw. Drydock adds a clause or a test and re-proves.</td></tr>
+  <tr><td>It keeps trying the same fix.</td><td>Stuck loop.</td><td>"Stop and tell me what's blocking." If it continues, "handoff", then a fresh session and <code>/drydock:wake</code>.</td></tr>
+  <tr><td>A test fails and it wants to change the test.</td><td>Wrong instinct. Tests are the contract.</td><td>"Fix the code, not the test." If the clause itself is wrong, say so; the card gets changed, with you, and re-frozen.</td></tr>
+  <tr><td>It asks you a technical question you can't answer.</td><td>It should have proposed a default.</td><td>"Recommend one and tell me what it costs if you're wrong." Then decide.</td></tr>
+  <tr><td>The session feels confused or repeats itself.</td><td>Context has filled or been compressed.</td><td>"Handoff." Fresh session. <code>/drydock:wake</code>.</td></tr>
+  <tr><td>"Usage limit reached."</td><td>Your plan's allowance for the period is spent.</td><td>Wait for the reset. Consider lite tier if this happens often: "switch Drydock to lite."</td></tr>
+  <tr><td>It wants to push, deploy, or publish and you didn't ask.</td><td>The owner gate caught it.</td><td>Deny in the prompt. Nothing happens. Ask what it was trying to do.</td></tr>
+  <tr><td>A panel verdict you disagree with.</td><td>The panel advises.</td><td>Say which findings you reject and why. They go into DECIDED.md as your ruling and are not re-argued.</td></tr>
+  <tr><td>Nothing seems to be happening for a long time.</td><td>A long run (panel, crew, big test) in the background.</td><td><code>/workflows</code> shows running workflows. Or ask "what are you waiting on?"</td></tr>
+  <tr><td>A command "not found" (node, git, gh).</td><td>A tool is missing or not on the path.</td><td><code>/drydock:setup</code> again; it gives the install link.</td></tr>
+  <tr><td>The map file looks mangled.</td><td>The card format was broken by an edit.</td><td>"Check the map format." Drydock runs the parser and fixes the shape. Section 4 shows the shape.</td></tr>
+</table>
+
+<!-- ============================== PART 12 ============================== -->
+<div class="part"></div>
+<h2>12. Glossary</h2>
+<table>
+  <tr><td><strong>Agent, subagent</strong></td><td>A separate Claude with its own fresh conversation, given one job. Drydock's checker, red team, walker, and panel seats are subagents.</td></tr>
+  <tr><td><strong>Branch</strong></td><td>A side copy of the code where work happens without touching the main shelf.</td></tr>
+  <tr><td><strong>Card</strong></td><td>One segment's entry in the map: what you can do when it's done, its exit test, its mode and size.</td></tr>
+  <tr><td><strong>Checkpoint, commit</strong></td><td>A saved snapshot of every file at a moment, with a note. Drydock saves one every time a test goes green.</td></tr>
+  <tr><td><strong>Compaction</strong></td><td>Claude Code compressing a long conversation to make room. Drydock snapshots first.</td></tr>
+  <tr><td><strong>Context</strong></td><td>Everything in the current conversation. It fills up, and quality drops as it fills.</td></tr>
+  <tr><td><strong>Deploy</strong></td><td>Putting a built app at a web address. Preview addresses are private; the live address is public.</td></tr>
+  <tr><td><strong>Exit test</strong></td><td>The binary definition of done for a segment: clauses that are each met or not, with evidence.</td></tr>
+  <tr><td><strong>Freeze, echo-grade</strong></td><td>Saving the exit test's exact words at the start, and requiring the grader to repeat them exactly at the end, so a softened test is caught as a text difference.</td></tr>
+  <tr><td><strong>Lane</strong></td><td>Which model family a role runs on. The checker never shares the builder's lane.</td></tr>
+  <tr><td><strong>MCP</strong></td><td>The standard way a tool (Netlify, Supabase, a browser) is plugged into Claude Code.</td></tr>
+  <tr><td><strong>Migration</strong></td><td>A file that changes the database's shape. Applied to a test database first.</td></tr>
+  <tr><td><strong>MVP</strong></td><td>The smallest version a real person can use for the real purpose.</td></tr>
+  <tr><td><strong>Plan mode</strong></td><td>A Claude Code mode where it reads and plans but changes nothing.</td></tr>
+  <tr><td><strong>Preview</strong></td><td>A private web address for a specific version, for trying before going live.</td></tr>
+  <tr><td><strong>Regression</strong></td><td>Something that used to work and stopped. Drydock re-runs every earlier segment's checks to catch these.</td></tr>
+  <tr><td><strong>Repository, repo</strong></td><td>The project's folder with its whole checkpoint history, on your computer and on GitHub.</td></tr>
+  <tr><td><strong>Stack</strong></td><td>The tools the app is made from.</td></tr>
+  <tr><td><strong>Stop-gate</strong></td><td>Drydock's built-in check that holds a "done" message while the test command is red. Lets go after three tries, loudly.</td></tr>
+  <tr><td><strong>Tier</strong></td><td>How much machinery runs: lite, standard, full.</td></tr>
+  <tr><td><strong>Workflow</strong></td><td>A script that runs many subagents in phases. Panels and the crew are workflows.</td></tr>
+</table>
+
+<!-- ============================== APPENDICES ============================== -->
+<div class="part"></div>
+<h2>Appendix A. Command reference</h2>
+<table>
+  <tr><th style="width:30%">Command</th><th>Does</th></tr>
+  <tr><td><code>/drydock:help</code></td><td>Explains Drydock and the one thing to do next.</td></tr>
+  <tr><td><code>/drydock:setup</code></td><td>First-time setup: checks, four questions, memory files, companions.</td></tr>
+  <tr><td><code>/drydock:plan</code></td><td>Interview, vision, stack, map, map review.</td></tr>
+  <tr><td><code>/drydock:build S3</code></td><td>Builds one segment end to end and stops at its exit test.</td></tr>
+  <tr><td><code>/drydock:check [S3]</code></td><td>Earlier checks re-run plus a fresh reviewer, on demand.</td></tr>
+  <tr><td><code>/drydock:prove [S3]</code></td><td>Red team plus walk plus proof sheet, on demand.</td></tr>
+  <tr><td><code>/drydock:panel [topic]</code></td><td>Convenes the panel. Builds the roster the first time.</td></tr>
+  <tr><td><code>/drydock:crew S7</code></td><td>Runs the full crew on a CREW card (full tier).</td></tr>
+  <tr><td><code>/drydock:ship</code></td><td>Preview, verified; live on your yes; push on your yes.</td></tr>
+  <tr><td><code>/drydock:wake</code></td><td>Start of session: read-back and one next move.</td></tr>
+  <tr><td><code>/drydock:handoff</code></td><td>End of session: the note, a snapshot, STATE.md.</td></tr>
+  <tr><td><code>/drydock:status</code></td><td>Where the build stands.</td></tr>
+</table>
+<p>Things you can say instead of typing commands: "build S3", "next", "where are we", "handoff", "ship it", "convene the panel on the dashboard", "show me the evidence", "stop and tell me what's blocking", "switch Drydock to standard".</p>
+<p>Built into Claude Code and used by Drydock: <code>/code-review</code>, <code>/verify</code>, <code>/goal</code>, <code>/rewind</code>, <code>/workflows</code>, <code>/config</code>, <code>/plugin</code>.</p>
+
+<h2>Appendix B. The files Drydock creates</h2>
+<pre>your-project/
+├── CLAUDE.md          the project's rules; Claude reads it every session
+├── VISION.md          what done means, in your words
+├── BUILD-MAP.md       the segments, their status, their exit tests
+├── STATE.md           where we are
+├── DECIDED.md         settled decisions with the why
+├── docs/
+│   ├── reviews/       proof sheets, panel verdicts, crew owner-reads
+│   ├── handoffs/      one note per session
+│   ├── proofs/        screenshots and attack cases, by segment
+│   ├── PANEL.md       the roster (once a panel has been convened)
+│   └── SECRETS.md     where each key lives, never what it is
+└── .drydock/
+    ├── config.json    tier, your level, the stack, the commands
+    ├── state.json     the active segment and the gate
+    ├── regression.json  every earlier segment's checks
+    ├── runs/S3/       the frozen exit test and the graded results
+    └── snapshots/     saved before compaction</pre>
+
+<h2>Appendix C. Where the method comes from</h2>
+<p class="small">Read in full on October 11, 2026. Anthropic: Claude Code best practices (code.claude.com/docs/en/best-practices); the /goal and dynamic-workflows documentation; "Effective harnesses for long-running agents" (November 2025); "Harness design for long-running application development" (March 2026); "Building effective agents"; "How we built our multi-agent research system". Public methods: Superpowers (github.com/obra/superpowers); GitHub Spec Kit; BMAD-METHOD; Anthropic's feature-dev plugin; HumanLayer's Advanced Context Engineering for Coding Agents; Addy Osmani's "My LLM coding workflow going into 2026" and "Agent harness engineering"; the Ralph-loop case study at orbi.build; Thoughtworks Technology Radar vol. 34 (April 2026).</p>
+<p class="small">Every serious method lands on the same five moves: write the definition of done before coding, keep memory in files, have a different agent verify the builder, accept no "done" without a runnable check, and gate anything that leaves the machine. Drydock packages a protocol developed on several real products and adds three things the public methods lack: a different model family checks the builder, the summary you read is audited against receipts first, and every control traces to a specific failure with a rule for retiring it.</p>
+<p class="small">Drydock is MIT licensed. Source and updates: github.com/wjp3/drydock.</p>
+
+</body>
+</html>

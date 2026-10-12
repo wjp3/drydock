@@ -1,0 +1,11 @@
+{
+  "name": "drydock",
+  "displayName": "Drydock",
+  "version": "0.1.0",
+  "description": "Walks you from an idea to a finished build: plan, build, check, prove, remember. Nothing is called done until a separate check says so. Sized to your plan.",
+  "author": { "name": "wjp3", "url": "https://github.com/wjp3" },
+  "homepage": "https://github.com/wjp3/drydock",
+  "repository": "https://github.com/wjp3/drydock",
+  "license": "MIT",
+  "keywords": ["workflow", "planning", "verification", "build-method", "non-coder", "mvp"]
+}

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Drydock setup checklist</title>
+<style>
+  @page { size: Letter; margin: 0.75in 0.8in; }
+  body { font-family: Georgia, "Times New Roman", serif; font-size: 10.6pt; line-height: 1.42; color: #1b1b1b; margin: 0; }
+  h1, h2, h3 { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; color: #163a5c; line-height: 1.2; }
+  h1 { font-size: 22pt; margin: 0 0 4pt; } h2 { font-size: 14pt; margin: 14pt 0 6pt; border-bottom: 2px solid #163a5c; padding-bottom: 3pt; } h3 { font-size: 11.5pt; margin: 10pt 0 4pt; }
+  .kicker { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; text-transform: uppercase; letter-spacing: .08em; font-size: 9pt; color: #2a7f8f; }
+  table { border-collapse: collapse; width: 100%; font-size: 9.6pt; margin: 6pt 0 10pt; } th, td { border: 1px solid #c4cfdb; padding: 4pt 6pt; vertical-align: top; text-align: left; } th { background: #e9eff6; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+  code { font-family: Menlo, Consolas, monospace; font-size: 9.2pt; background: #f2f4f6; padding: 1px 4px; border-radius: 3px; }
+  pre { font-family: Menlo, Consolas, monospace; font-size: 9.2pt; background: #f2f4f6; padding: 8pt 10pt; border-radius: 4px; white-space: pre-wrap; border: 1px solid #e0e5ea; margin: 6pt 0 10pt; }
+  .box { border-left: 4px solid #2a7f8f; background: #f1f8f9; padding: 7pt 11pt; margin: 9pt 0; page-break-inside: avoid; }
+  .warn { border-left-color: #b23a3a; background: #fbf0f0; }
+  ol li, ul li { margin: 3pt 0; } .chk li { list-style: none; } .chk li::before { content: "\2610  "; }
+  .part { page-break-before: always; }
+</style></head><body>
+<div class="kicker">For the person setting it up</div>
+<h1>Drydock setup checklist</h1>
+<p>A one-time, twenty-to-thirty-minute sit-down that leaves a non-technical person able to build with Claude Code and Drydock without ever opening a terminal again. Do it in person or by screen share with control (on a Mac: Messages or FaceTime screen sharing, then "Ask to control"; on Windows: Quick Assist). You press the buttons. They type their own passwords.</p>
+
+<h2>Before you start</h2>
+<ul class="chk">
+  <li>They have a <strong>paid Claude plan</strong> (Pro or above) and can sign in at claude.ai. Without this, Claude Code does not exist for them.</li>
+  <li>You know whether the computer is a <strong>Mac or Windows</strong>, and they know its <strong>password</strong> (installing programs asks for it).</li>
+  <li>They have, or will create during the sit-down, a free <strong>GitHub</strong> account and a free <strong>Netlify</strong> account. They choose the passwords.</li>
+  <li>30 minutes, a stable internet connection, and the playbook PDF open somewhere.</li>
+</ul>
+
+<h2>The sit-down</h2>
+<h3>1. The Claude desktop app (5 minutes)</h3>
+<ol>
+  <li>Download from <code>claude.com/download</code>, install, open it, and let them sign in.</li>
+  <li>Click the <strong>Code</strong> tab once so it finishes its own setup.</li>
+</ol>
+
+<h3>2. Run the installer (10 minutes, mostly waiting)</h3>
+<p><strong>Mac.</strong> Open Terminal (press Command and Space, type Terminal, press Enter). Paste this one line and press Enter:</p>
+<pre>bash &lt;(curl -fsSL https://raw.githubusercontent.com/wjp3/drydock/v0.1.0/install/Install-Drydock.command)</pre>
+<p><strong>Windows.</strong> Open PowerShell as administrator (press the Windows key, type PowerShell, right-click it, Run as administrator). Paste this one line and press Enter:</p>
+<pre>irm https://raw.githubusercontent.com/wjp3/drydock/v0.1.0/install/Install-Drydock.ps1 | iex</pre>
+<p>The installer adds, in order, only what is missing: git, Node.js, GitHub's command-line tool, Claude Code's command-line tool, the Drydock plugin, and a <code>Builds</code> folder with a START HERE note. It opens the browser for sign-ins. When the computer asks for its password, they type it. When GitHub opens in the browser, they sign in (or create the account) and click <strong>Authorize</strong>.</p>
+<div class="box warn"><strong>If you were emailed the installer file instead:</strong> on a Mac, right-click <code>Install-Drydock.command</code> and choose Open (double-clicking a downloaded script is blocked the first time). On Windows, right-click <code>Install-Drydock.bat</code> and choose Run as administrator; if "Windows protected your PC" appears, click More info, then Run anyway.</div>
+
+<h3>3. Netlify (3 minutes)</h3>
+<ol>
+  <li>Create the free account at <code>netlify.com</code> (they choose the password).</li>
+  <li>Drydock signs the computer in to Netlify the first time it ships, through the browser. Nothing to do now.</li>
+</ol>
+
+<h3>4. Prove it works (2 minutes)</h3>
+<ol>
+  <li>In the Claude app, Code tab, open the folder <code>Builds / my-first-build</code>.</li>
+  <li>Type <code>/</code> in the message box. You should see <code>/drydock:help</code> in the list. Run it.</li>
+  <li>If it is not there: type <code>/plugin marketplace add wjp3/drydock</code>, then <code>/plugin install drydock@drydock</code>, then try again.</li>
+</ol>
+
+<div class="part"></div>
+<h2>Their first build, together (45 to 90 minutes)</h2>
+<p>Do this part with them at the keyboard and you beside them. The goal is that they see the whole loop once: a plan, a stop with evidence, saying "next", and a handoff.</p>
+<ol>
+  <li><code>/drydock:setup</code>. They answer the four questions. Choose the plan honestly; the light tier is right for Pro.</li>
+  <li><code>/drydock:plan</code>. They describe what they want in their own words. Let them answer the interview; resist answering for them. Read the vision back together. The map review will propose changes; they decide.</li>
+  <li><code>/drydock:build S0</code>. The skeleton: an empty app at a web address, one passing test, code on GitHub. Watch the stop message arrive. Point at the evidence lines.</li>
+  <li><code>/drydock:ship</code>. Preview first, verified by loading it. They say "go live" or not. Show them the preview link on their phone.</li>
+  <li>Say <strong>next</strong> and build S1 if time allows. Otherwise <code>/drydock:handoff</code>, close the app, reopen it, and <code>/drydock:wake</code> so they see that nothing was lost.</li>
+</ol>
+
+<h2>Leave behind</h2>
+<ul class="chk">
+  <li>The playbook PDF, with pages 2 and 3 (the quickstart) printed.</li>
+  <li>The START HERE note the installer put in their Builds folder.</li>
+  <li>The three sentences: "Show me the evidence." "Stop and tell me what's blocking." "Handoff."</li>
+  <li>Your phone number, and the agreement that a screenshot of the screen is a fine way to ask for help.</li>
+</ul>
+
+<h2>If something goes wrong</h2>
+<table>
+  <tr><th style="width:36%">Symptom</th><th>Fix</th></tr>
+  <tr><td>Terminal says "command not found: claude" right after installing</td><td>Close Terminal and open a new window, then run the installer line again. New programs appear in new windows.</td></tr>
+  <tr><td>The Mac blocks the installer file</td><td>Right-click it, choose Open. Or use the one-line Terminal command instead, which is never blocked.</td></tr>
+  <tr><td>Windows shows "Windows protected your PC"</td><td>More info, then Run anyway. Or use the one-line PowerShell command.</td></tr>
+  <tr><td>No <code>/drydock:help</code> in the slash menu</td><td>Type <code>/plugin marketplace add wjp3/drydock</code> then <code>/plugin install drydock@drydock</code> in the message box. If the app was open during the install, quit and reopen it.</td></tr>
+  <tr><td>The GitHub sign-in page never opened</td><td>In Terminal or PowerShell: <code>gh auth login --web</code>, then paste the code it shows into the browser page it opens.</td></tr>
+  <tr><td>"Usage limit reached"</td><td>The plan's allowance for the period is spent. Wait for the reset. Keep the light tier.</td></tr>
+  <tr><td>It asks for a password in the chat</td><td>Never type one there. Sign-ins happen in the browser only. Say "no" and close the prompt.</td></tr>
+  <tr><td>A permission box about pushing or deploying appears and they did not ask for it</td><td>That is the owner gate working. Deny it. Nothing happens.</td></tr>
+</table>
+<p class="kicker">Drydock v0.1.0 · github.com/wjp3/drydock · MIT</p>
+</body></html>

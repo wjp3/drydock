@@ -1,0 +1,31 @@
+---
+date: {{DATE}}
+type: proof-sheet
+segment: {{SEGMENT}}
+result: {{RESULT}}
+---
+
+# Proof sheet — {{SEGMENT}} {{TITLE}}
+
+## The exit test, clause by clause (frozen text, echoed verbatim)
+| Clause | Text | Met | Evidence (command and output, or screenshot path) |
+|---|---|---|---|
+{{CLAUSE_ROWS}}
+
+## What the checker found (fresh context, different model)
+{{CHECKER}}
+
+## What the red team tried (and what held)
+{{RED_TEAM}}
+
+## The walk (what a person sees)
+{{WALK}}
+
+## Regression: earlier segments still green
+{{REGRESSION}}
+
+## Commit
+{{COMMIT}}
+
+## Not proven (say it plainly)
+{{NOT_PROVEN}}
